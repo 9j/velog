@@ -27,6 +27,7 @@ const UserHead = ({ username, profile, self, following, onToggleFollow, rawTagNa
   const { github, twitter, facebook, email, url } = profile.profile_links;
   const hasAccount = !!(github || twitter || facebook);
   const hasLink = !!(url || email);
+  const urlRegExr = /(http|https):\/\/([\w+?.\w+])+([a-zA-Z0-9~!@#$%^&*()_\-=+\\/?.:;',]*)?/;
 
   return (
     <div className="UserHead">
@@ -38,19 +39,19 @@ const UserHead = ({ username, profile, self, following, onToggleFollow, rawTagNa
       <div className="user-info">
         <section className="top">
           {!self &&
-            following !== undefined && (
-              <div className="subscribe-wrapper">
-                {following ? (
-                  <Button className="subscribe" theme="gray" onClick={onToggleFollow}>
-                    구독중
-                  </Button>
-                ) : (
-                  <Button className="subscribe" onClick={onToggleFollow}>
-                    구독하기
-                  </Button>
-                )}
-              </div>
-            )}
+          following !== undefined && (
+            <div className="subscribe-wrapper">
+              {following ? (
+                <Button className="subscribe" theme="gray" onClick={onToggleFollow}>
+                  구독중
+                </Button>
+              ) : (
+                <Button className="subscribe" onClick={onToggleFollow}>
+                  구독하기
+                </Button>
+              )}
+            </div>
+          )}
           <div className="username">@{username}</div>
         </section>
         <section className="profile-content">
@@ -87,7 +88,7 @@ const UserHead = ({ username, profile, self, following, onToggleFollow, rawTagNa
                 {url && (
                   <div className="link-line">
                     <LinkIcon />
-                    <a href={url} target="_blank">
+                    <a href={!urlRegExr.exec(url.toLowerCase()) ? `http://${url}` : url} target="_blank">
                       {url}
                     </a>
                   </div>
